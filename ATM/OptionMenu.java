@@ -47,7 +47,9 @@ public class OptionMenu {
 				System.out.println("\nSelect the account you want to access: ");
 				System.out.println(" Type 1 - Checking Account");
 				System.out.println(" Type 2 - Savings Account");
-				System.out.println(" Type 3 - Exit");
+				System.out.println(" Type 3 - Investment Account");
+				System.out.println(" Type 4 - Exit");
+
 				System.out.print("\nChoice: ");
 
 				int selection = menuInput.nextInt();
@@ -59,7 +61,10 @@ public class OptionMenu {
 				case 2:
 					getSaving(acc);
 					break;
-				case 3:
+					case 3:
+					getInvestment(acc);
+						break;
+				case 4:
 					end = true;
 					break;
 				default:
@@ -77,11 +82,12 @@ public class OptionMenu {
 		while (!end) {
 			try {
 				System.out.println("\nChecking Account: ");
-				System.out.println(" Type 1 - View Balance");
+				System.out.println(" Type 1 - View Checking Balance");
 				System.out.println(" Type 2 - Withdraw Funds");
 				System.out.println(" Type 3 - Deposit Funds");
 				System.out.println(" Type 4 - Transfer Funds");
-				System.out.println(" Type 5 - Exit");
+				System.out.println(" Type 5- Total Account Balance");
+				System.out.println(" Type 6 - Exit");
 				System.out.print("\nChoice: ");
 
 				int selection = menuInput.nextInt();
@@ -100,7 +106,10 @@ public class OptionMenu {
 				case 4:
 					acc.getTransferInput("Checking");
 					break;
-				case 5:
+					case 5:
+						System.out.println("\nTotal Account Balance: " + moneyFormat.format(acc.totalBalance()));
+						break;
+				case 6:
 					end = true;
 					break;
 				default:
@@ -118,11 +127,12 @@ public class OptionMenu {
 		while (!end) {
 			try {
 				System.out.println("\nSavings Account: ");
-				System.out.println(" Type 1 - View Balance");
+				System.out.println(" Type 1 - View Saving Balance");
 				System.out.println(" Type 2 - Withdraw Funds");
 				System.out.println(" Type 3 - Deposit Funds");
 				System.out.println(" Type 4 - Transfer Funds");
-				System.out.println(" Type 5 - Exit");
+				System.out.println(" Type 5- Total Account Balance");
+				System.out.println(" Type 6 - Exit");
 				System.out.print("Choice: ");
 				int selection = menuInput.nextInt();
 				switch (selection) {
@@ -138,7 +148,10 @@ public class OptionMenu {
 				case 4:
 					acc.getTransferInput("Savings");
 					break;
-				case 5:
+					case 5:
+						System.out.println("\nTotal Account Balance: " + moneyFormat.format(acc.totalBalance()));
+						break;
+				case 6:
 					end = true;
 					break;
 				default:
@@ -150,6 +163,49 @@ public class OptionMenu {
 			}
 		}
 	}
+
+	public void getInvestment(Account acc) {
+		boolean end = false;
+		while (!end) {
+			try {
+				System.out.println("\nInvestment Account: ");
+				System.out.println(" Type 1 - View Investment Balance");
+				System.out.println(" Type 2 - Withdraw Funds");
+				System.out.println(" Type 3 - Deposit Funds");
+				System.out.println(" Type 4 - Transfer Funds");
+				System.out.println(" Type 5 -  All Account's Total Balance");
+				System.out.println(" Type 6 - Exit");
+				System.out.print("Choice: ");
+				int selection = menuInput.nextInt();
+				switch (selection) {
+					case 1:
+						System.out.println("\nInvestment Account Balance: " + moneyFormat.format(acc.investmentBalance()));
+						break;
+					case 2:
+					acc.investmentWithdrawInput();
+						break;
+					case 3:
+					acc.investmentDepositInput();
+						break;
+					case 4:
+						acc.getTransferInput("Investment");
+						break;
+					case 5:
+						System.out.println("\nTotal Account Balance: " + moneyFormat.format(acc.totalBalance()));
+						break;
+					case 6:
+						end = true;
+						break;
+					default:
+						System.out.println("\nInvalid Choice.");
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("\nInvalid Choice.");
+				menuInput.next();
+			}
+		}
+	}
+
 
 	public void createAccount() throws IOException {
 		int cst_no = 0;
