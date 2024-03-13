@@ -1,9 +1,63 @@
+import java.io.*;
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class Account {
-	// variables
+
+	private  Logger checking = Logger.getLogger("Logger1");
+	private  Logger saving = Logger.getLogger("Logger2");
+	private  Logger investment = Logger.getLogger("Logger3");
+
+	Date date = new Date();
+
+	SimpleFormatter formatter = new SimpleFormatter();
+
+	FileHandler fh_checking;
+	FileHandler fh_saving;
+	FileHandler fh_investment;
+//	PrintWriter printWriter;
+
+    {
+        try {
+
+//			 printWriter = new PrintWriter("output2.txt");
+//
+//			//printWriter.close();
+
+			// Set up file handler to write logs to a text file
+			fh_checking = new FileHandler("checking.log");
+			fh_saving = new FileHandler("saving.log");
+			fh_investment = new FileHandler("investment.log");
+
+			checking.addHandler(fh_checking);
+			saving.addHandler(fh_saving);
+			investment.addHandler(fh_investment);
+
+			checking.setLevel(Level.INFO);
+			saving.setLevel(Level.INFO);
+			investment.setLevel(Level.INFO);
+
+
+
+			fh_checking.setFormatter(formatter);
+			fh_saving.setFormatter(formatter);
+			fh_investment.setFormatter(formatter);
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    // variables
 	private int customerNumber;
 	private int pinNumber;
 	private double checkingBalance = 0;
@@ -142,7 +196,8 @@ public class Account {
 				System.out.print("\nAmount you want to withdraw from Investment Account: ");
 				double amount = input.nextDouble();
 				if ((investmentBalance - amount) >= 0 && amount >= 0) {
-					calcInvestmentWithdraw(amount);
+					investment.log(Level.INFO, date+ " Withdraw amount " + calcInvestmentWithdraw(amount));
+					//printWriter.println(date+ " Withdraw amount " +  calcInvestmentWithdraw(amount));
 					System.out.println("\nCurrent Investment Account Balance: " + moneyFormat.format(investmentBalance));
 					end = true;
 				} else {
@@ -163,7 +218,7 @@ public class Account {
 				System.out.print("\nAmount you want to withdraw from Checking Account: ");
 				double amount = input.nextDouble();
 				if ((checkingBalance - amount) >= 0 && amount >= 0) {
-					calcCheckingWithdraw(amount);
+					checking.log(Level.INFO, date+ " withdraw from checking " + calcCheckingWithdraw(amount));
 					System.out.println("\nCurrent Checking Account Balance: " + moneyFormat.format(checkingBalance));
 					end = true;
 				} else {
@@ -184,7 +239,8 @@ public class Account {
 				System.out.print("\nAmount you want to withdraw from Savings Account: ");
 				double amount = input.nextDouble();
 				if ((savingBalance - amount) >= 0 && amount >= 0) {
-					calcSavingWithdraw(amount);
+					saving.log(Level.INFO, date+ " withdraw from saving " + calcSavingWithdraw(amount));
+
 					System.out.println("\nCurrent Savings Account Balance: " + moneyFormat.format(savingBalance));
 					end = true;
 				} else {
@@ -205,7 +261,7 @@ public class Account {
 				System.out.print("\nAmount you want to deposit your Investment Account: ");
 				double amount = input.nextDouble();
 				if ((investmentBalance + amount) >= 0 && amount >= 0) {
-					calcInvestmentDeposit(amount);
+					investment.log(Level.INFO, date+ " deposit into investment " + calcInvestmentDeposit(amount));
 					System.out.println("\nCurrent Investment Account Balance: " + moneyFormat.format(investmentBalance));
 					end = true;
 				} else {
@@ -226,7 +282,7 @@ public class Account {
 				System.out.print("\nAmount you want to deposit your Checking Account: ");
 				double amount = input.nextDouble();
 				if ((checkingBalance + amount) >= 0 && amount >= 0) {
-					calcCheckingDeposit(amount);
+					checking.log(Level.INFO, date+ " deposit into checking " + calcCheckingDeposit(amount));
 					System.out.println("\nCurrent Checking Account Balance: " + moneyFormat.format(checkingBalance));
 					end = true;
 				} else {
@@ -248,7 +304,7 @@ public class Account {
 				double amount = input.nextDouble();
 
 				if ((savingBalance + amount) >= 0 && amount >= 0) {
-					calcSavingDeposit(amount);
+					saving.log(Level.INFO, date+ " deposit into saving " + calcSavingDeposit(amount));
 					System.out.println("\nCurrent Savings Account Balance: " + moneyFormat.format(savingBalance));
 					end = true;
 				} else {
@@ -278,7 +334,7 @@ public class Account {
 						System.out.print("\nAmount you want to deposit into your Savings Account: ");
 						double amount = input.nextDouble();
 						if ((savingBalance + amount) >= 0 && (checkingBalance - amount) >= 0 && amount >= 0) {
-							calcCheckTransfer(amount);
+							saving.log(Level.INFO, date+ " transfer to saving " + calcSavingDeposit(amount));
 							System.out.println("\nCurrent Savings Account Balance: " + moneyFormat.format(savingBalance));
 							System.out.println(
 									"\nCurrent Checking Account Balance: " + moneyFormat.format(checkingBalance));
@@ -292,7 +348,7 @@ public class Account {
 							System.out.print("\nAmount you want to deposit into your Investment Account: ");
 							double amount1 = input.nextDouble();
 							if ((investmentBalance + amount1) >= 0 && (checkingBalance - amount1) >= 0 && amount1 >= 0) {
-								calcCheckTransfer(amount1);
+								investment.log(Level.INFO, date+ " transfer to saving " + calcInvestmentDepositFromChecking(amount1));
 								System.out.println("\nCurrent Investment Account Balance: " + moneyFormat.format(investmentBalance));
 								System.out.println(
 										"\nCurrent Checking Account Balance: " + moneyFormat.format(checkingBalance));
@@ -322,7 +378,8 @@ public class Account {
 							System.out.print("\nAmount you want to deposit into your checking account: ");
 							double amount = input.nextDouble();
 							if ((checkingBalance + amount) >= 0 && (investmentBalance - amount) >= 0 && amount >= 0) {
-								getCalcInvestmentTransferToChecking(amount); //
+								getCalcInvestmentTransferToChecking(amount);
+								checking.log(Level.INFO, date+ " transfer to checking " + checkingBalance);
 								System.out.println("\nCurrent investment account balance: " + moneyFormat.format(investmentBalance));
 								System.out.println("\nCurrent checking account balance: " + moneyFormat.format(checkingBalance));
 								end = true;
@@ -336,6 +393,7 @@ public class Account {
 							double amount1 = input.nextDouble();
 							if ((savingBalance + amount1) >= 0 && (investmentBalance - amount1) >= 0 && amount1 >= 0) {
 								getCalcInvestmentTransferToSaving(amount1);
+								saving.log(Level.INFO, date+ " transfer to saving " + savingBalance);;
 								System.out.println("\nCurrent Investment Account Balance: " + moneyFormat.format(investmentBalance));
 								System.out.println(
 										"\nCurrent Saving Account Balance: " + moneyFormat.format(savingBalance));
@@ -366,6 +424,7 @@ public class Account {
 						double amount = input.nextDouble();
 						if ((checkingBalance + amount) >= 0 && (savingBalance - amount) >= 0 && amount >= 0) {
 							calcSavingTransfer(amount);
+							//logger.log(Level.INFO + date + " transfer into checking ");
 							System.out.println("\nCurrent checking account balance: " + moneyFormat.format(checkingBalance));
 							System.out.println("\nCurrent savings account balance: " + moneyFormat.format(savingBalance));
 							end = true;
@@ -400,4 +459,56 @@ public class Account {
 			}
 		}
 	}
-}
+
+	//reading log files
+	public void getCheckingLogs() {
+		File check = new File("checking.log");
+		Scanner scan1;
+
+		{
+			try {
+				scan1 = new Scanner(check);
+				while (scan1.hasNextLine()) {
+					System.out.println(scan1.nextLine());
+				}
+			} catch (FileNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
+
+	public void getSavingLogs() {
+		File file = new File("saving.log");
+		Scanner scan;
+
+		{
+			try {
+				scan = new Scanner(file);
+				while (scan.hasNextLine()) {
+					System.out.println(scan.nextLine());
+				}
+			} catch (FileNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
+
+	public void getInvestmentLogs() {
+		File file = new File("investment.log");
+		Scanner scan;
+
+		{
+			try {
+				scan = new Scanner(file);
+				while (scan.hasNextLine()) {
+					System.out.println(scan.nextLine());
+				}
+			} catch (FileNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
+
+
+
+}//class

@@ -86,8 +86,9 @@ public class OptionMenu {
 				System.out.println(" Type 2 - Withdraw Funds");
 				System.out.println(" Type 3 - Deposit Funds");
 				System.out.println(" Type 4 - Transfer Funds");
-				System.out.println(" Type 5- Total Account Balance");
-				System.out.println(" Type 6 - Exit");
+				System.out.println(" Type 5 - Total Account Balance");
+				System.out.println(" Type 6 - Show Transaction History");
+				System.out.println(" Type 7 - Exit");
 				System.out.print("\nChoice: ");
 
 				int selection = menuInput.nextInt();
@@ -109,7 +110,10 @@ public class OptionMenu {
 					case 5:
 						System.out.println("\nTotal Account Balance: " + moneyFormat.format(acc.totalBalance()));
 						break;
-				case 6:
+					case 6:
+						acc.getCheckingLogs();
+						break;
+				case 7:
 					end = true;
 					break;
 				default:
