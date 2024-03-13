@@ -1,4 +1,4 @@
-import java.io.IOException;
+import java.io.*;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.InputMismatchException;
@@ -21,14 +21,27 @@ public class OptionMenu {
 				customerNumber = menuInput.nextInt();
 				System.out.print("\nEnter your PIN number: ");
 				pinNumber = menuInput.nextInt();
+
+				Account account = new Account();
+				account.setCustomerNumber(customerNumber);;
+				account.setPinNumber(pinNumber);
+				Integer custNum = account.getCustomerNumber();
+				int pinNum = account.getPinNumber();
+				loginData(custNum,pinNum);
+
+//				data.put(custNum,account);
 				Iterator it = data.entrySet().iterator();
+
 				while (it.hasNext()) {
 					Map.Entry pair = (Map.Entry) it.next();
 					Account acc = (Account) pair.getValue();
+
 					if (data.containsKey(customerNumber) && pinNumber == acc.getPinNumber()) {
+
 						getAccountType(acc);
 						end = true;
 						break;
+
 					}
 				}
 				if (!end) {
@@ -39,6 +52,28 @@ public class OptionMenu {
 			}
 		}
 	}
+
+	public void loginData(int customerNUmber, int pinNumber){
+		try {
+			//PrintWriter printWriter = new PrintWriter("/Users/asan/Desktop/Projects/ATM-Machine-Java/loginDate.log");
+			FileWriter fileWriter = new FileWriter("/Users/asan/Desktop/Projects/ATM-Machine-Java/loginDate.log",true);
+			fileWriter.write(customerNUmber +" " +pinNumber + "\n");
+			fileWriter.close();
+			Scanner scanner = new Scanner("/Users/asan/Desktop/Projects/ATM-Machine-Java/loginDate.log");
+
+			while (scanner.hasNextLine()){
+				System.out.println(scanner.nextLine());
+			}
+
+
+		}
+		catch (FileNotFoundException e){
+			System.out.println("File not found "+e.getMessage());
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 	public void getAccountType(Account acc) {
 		boolean end = false;
@@ -135,8 +170,9 @@ public class OptionMenu {
 				System.out.println(" Type 2 - Withdraw Funds");
 				System.out.println(" Type 3 - Deposit Funds");
 				System.out.println(" Type 4 - Transfer Funds");
-				System.out.println(" Type 5- Total Account Balance");
-				System.out.println(" Type 6 - Exit");
+				System.out.println(" Type 5-  Total Account Balance");
+				System.out.println(" Type 6 - Show Transaction History");
+				System.out.println(" Type 7 - Exit");
 				System.out.print("Choice: ");
 				int selection = menuInput.nextInt();
 				switch (selection) {
@@ -155,7 +191,10 @@ public class OptionMenu {
 					case 5:
 						System.out.println("\nTotal Account Balance: " + moneyFormat.format(acc.totalBalance()));
 						break;
-				case 6:
+					case 6:
+						acc.getSavingLogs();
+						break;
+				case 7:
 					end = true;
 					break;
 				default:
@@ -177,8 +216,9 @@ public class OptionMenu {
 				System.out.println(" Type 2 - Withdraw Funds");
 				System.out.println(" Type 3 - Deposit Funds");
 				System.out.println(" Type 4 - Transfer Funds");
-				System.out.println(" Type 5 -  All Account's Total Balance");
-				System.out.println(" Type 6 - Exit");
+				System.out.println(" Type 5 - All Account's Total Balance");
+				System.out.println(" Type 6 - Show Transaction History");
+				System.out.println(" Type 7 - Exit");
 				System.out.print("Choice: ");
 				int selection = menuInput.nextInt();
 				switch (selection) {
@@ -198,6 +238,9 @@ public class OptionMenu {
 						System.out.println("\nTotal Account Balance: " + moneyFormat.format(acc.totalBalance()));
 						break;
 					case 6:
+						acc.getInvestmentLogs();
+						break;
+					case 7:
 						end = true;
 						break;
 					default:
@@ -222,6 +265,7 @@ public class OptionMenu {
 				while (it.hasNext()) {
 					Map.Entry pair = (Map.Entry) it.next();
 					if (!data.containsKey(cst_no)) {
+
 						end = true;
 					}
 				}

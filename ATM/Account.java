@@ -31,9 +31,9 @@ public class Account {
 //			//printWriter.close();
 
 			// Set up file handler to write logs to a text file
-			fh_checking = new FileHandler("checking.log");
-			fh_saving = new FileHandler("saving.log");
-			fh_investment = new FileHandler("investment.log");
+			fh_checking = new FileHandler("checking.log",true);
+			fh_saving = new FileHandler("saving.log",true);
+			fh_investment = new FileHandler("investment.log",true);
 
 			checking.addHandler(fh_checking);
 			saving.addHandler(fh_saving);
@@ -94,7 +94,6 @@ public class Account {
 
 	public void setCustomerNumber(int customerNumber) {
 		this.customerNumber = customerNumber;
-		//return customerNumber;
 	}
 
 	public int getCustomerNumber() {
@@ -119,7 +118,7 @@ public class Account {
 	}
 
 	public double calcCheckingWithdraw(double amount) {
-		checkingBalance = (checkingBalance - amount);
+		checkingBalance = checkingBalance - amount;
 		return checkingBalance;
 	}
 
@@ -195,8 +194,8 @@ public class Account {
 				System.out.println("\nCurrent Investment Account Balance: " + moneyFormat.format(investmentBalance));
 				System.out.print("\nAmount you want to withdraw from Investment Account: ");
 				double amount = input.nextDouble();
-				if ((investmentBalance - amount) >= 0 && amount >= 0) {
-					investment.log(Level.INFO, date+ " Withdraw amount " + calcInvestmentWithdraw(amount));
+				if ((calcInvestmentWithdraw(amount) >= 0 && amount >= 0)) {
+					investment.log(Level.INFO, date+ " Withdraw amount " + amount);
 					//printWriter.println(date+ " Withdraw amount " +  calcInvestmentWithdraw(amount));
 					System.out.println("\nCurrent Investment Account Balance: " + moneyFormat.format(investmentBalance));
 					end = true;
@@ -217,8 +216,8 @@ public class Account {
 				System.out.println("\nCurrent Checking Account Balance: " + moneyFormat.format(checkingBalance));
 				System.out.print("\nAmount you want to withdraw from Checking Account: ");
 				double amount = input.nextDouble();
-				if ((checkingBalance - amount) >= 0 && amount >= 0) {
-					checking.log(Level.INFO, date+ " withdraw from checking " + calcCheckingWithdraw(amount));
+				if (calcCheckingWithdraw(amount) >= 0 && amount >= 0) {
+					checking.log(Level.INFO, date+ " withdraw from checking " + amount);
 					System.out.println("\nCurrent Checking Account Balance: " + moneyFormat.format(checkingBalance));
 					end = true;
 				} else {
